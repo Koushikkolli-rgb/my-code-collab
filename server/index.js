@@ -1,25 +1,21 @@
 const express = require("express");
+const app = express();
 const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
 
-const app = express();
 app.use(cors());
 
-// Create the standard HTTP server
 const server = http.createServer(app);
 
-// Initialize Socket.io (The Magic Spell)
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000", // Allow the React app to connect
+    origin: "*", // Allow any website (like your Vercel app) to connect
     methods: ["GET", "POST"],
   },
 });
 
-// server/index.js (Keep the top imports the same)
-
-// Store user info: { "socket_id": { room: "123", username: "John" } }
+// --- YOUR ROOM LOGIC STARTS HERE ---
 const userMap = {};
 
 io.on("connection", (socket) => {
@@ -28,7 +24,7 @@ io.on("connection", (socket) => {
   socket.on("join_room", (data) => {
     const { room, username } = data;
     socket.join(room);
-
+    
     // Save the user's info
     userMap[socket.id] = { room, username };
 
@@ -48,15 +44,19 @@ io.on("connection", (socket) => {
       // Notify the room that they left
       socket.to(user.room).emit("notification", `${user.username} has left the room.`);
       console.log(`${user.username} disconnected.`);
-
+      
       // Remove them from our memory
       delete userMap[socket.id];
     }
   });
 });
+// --- YOUR ROOM LOGIC ENDS HERE ---
 
-// (Keep the server.listen part the same)
 
-server.listen(3001, () => {
-  console.log("SERVER RUNNING ON PORT 3001");
+// --- DEPLOYMENT SETTINGS (The new part) ---
+// Use the port Render gives us, OR use 3001 if we are on localhost
+const PORT = process.env.PORT || 3001;
+
+server.listen(PORT, () => {
+  console.log(`SERVER IS RUNNING ON PORT ${PORT}`);
 });
