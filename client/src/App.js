@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import Editor from "@monaco-editor/react";
 import "./App.css";
 
-const socket = io.connect("http://localhost:3001");
+const socket = io.connect("https://my-code-collab.onrender.com");
 
 function App() {
   const [room, setRoom] = useState("");
