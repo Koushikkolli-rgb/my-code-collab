@@ -4,18 +4,20 @@ const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
 
+// 1. Allow CORS for Express
 app.use(cors());
 
+// 2. Create the HTTP server
 const server = http.createServer(app);
 
+// 3. Create Socket.io Server with strict CORS settings
 const io = new Server(server, {
   cors: {
-    origin: "*", // Allow any website (like your Vercel app) to connect
+    origin: "*", // <--- THIS IS CRITICAL. It allows Vercel to connect.
     methods: ["GET", "POST"],
   },
 });
 
-// --- YOUR ROOM LOGIC STARTS HERE ---
 const userMap = {};
 
 io.on("connection", (socket) => {
@@ -24,11 +26,7 @@ io.on("connection", (socket) => {
   socket.on("join_room", (data) => {
     const { room, username } = data;
     socket.join(room);
-    
-    // Save the user's info
     userMap[socket.id] = { room, username };
-
-    // Notify others in the room
     console.log(`${username} joined room: ${room}`);
     socket.to(room).emit("notification", `${username} has joined the room!`);
   });
@@ -37,26 +35,18 @@ io.on("connection", (socket) => {
     socket.to(data.room).emit("receive_code", data.code);
   });
 
-  // Handle Disconnect (Closing the tab)
   socket.on("disconnect", () => {
     const user = userMap[socket.id];
     if (user) {
-      // Notify the room that they left
       socket.to(user.room).emit("notification", `${user.username} has left the room.`);
-      console.log(`${user.username} disconnected.`);
-      
-      // Remove them from our memory
       delete userMap[socket.id];
     }
   });
 });
-// --- YOUR ROOM LOGIC ENDS HERE ---
 
-
-// --- DEPLOYMENT SETTINGS (The new part) ---
-// Use the port Render gives us, OR use 3001 if we are on localhost
+// 4. LISTEN ON THE SERVER, NOT THE APP
+// If you use app.listen(), Socket.io will NOT work (404 Error)
 const PORT = process.env.PORT || 3001;
-
 server.listen(PORT, () => {
   console.log(`SERVER IS RUNNING ON PORT ${PORT}`);
 });
