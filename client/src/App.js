@@ -3,10 +3,23 @@ import io from "socket.io-client";
 import Editor from "@monaco-editor/react";
 import "./App.css";
 
-// ⚠️ IMPORTANT: Replace this with your actual Render URL if you have deployed the server!
-// If testing locally on your laptop, change it back to "http://localhost:3001"
-const socket = io.connect("https://my-code-collab-server.onrender.com");
+// --- SMART CONNECTION LOGIC ---
+// 1. Check if we are running on localhost
+const isLocal = window.location.hostname === "localhost";
 
+// 2. Set the URL automatically
+// REPLACE "https://your-app.onrender.com" with your REAL Render URL later!
+const SERVER_URL = isLocal 
+  ? "http://localhost:3001" 
+  : "https://my-code-collab.onrender.com";
+
+const socket = io(SERVER_URL, {
+  transports: ["websocket", "polling"],
+  withCredentials: true
+});
+
+function App() {
+  // ... rest of your code ...
 function App() {
   const [room, setRoom] = useState("");
   const [username, setUsername] = useState("");
