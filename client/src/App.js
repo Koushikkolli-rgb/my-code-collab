@@ -17,8 +17,6 @@ const socket = io(SERVER_URL, {
   transports: ["websocket", "polling"],
   withCredentials: true
 });
-
-function App() {
   // ... rest of your code ...
 function App() {
   const [room, setRoom] = useState("");
