@@ -1,18 +1,18 @@
-# 💻 Code Collab - Real-time Collaborative Code Editor
+#  Code Collab - Real-time Collaborative Code Editor
 
 **Code Collab** is a real-time collaborative code editor that allows multiple users to join a room and edit code simultaneously. Changes are synced instantly across all devices, making it perfect for pair programming, interviews, or teaching.
 
 ![Project Status](https://img.shields.io/badge/Status-Live-success)
 ![Tech Stack](https://img.shields.io/badge/Stack-MERN%20%2B%20Socket.io-blue)
 
-## 🚀 Live Demo
+##  Live Demo
 
-- **Frontend (App):** [Insert your Vercel Link Here]
-- **Backend (Server):** [Insert your Render Link Here]
+- **Frontend (App):** [https://my-code-collab-beta.vercel.app/]
+- **Backend (Server):** [https://my-code-collab.onrender.com]
 
 ---
 
-## ✨ Features
+##  Features
 
 - **Real-time Collaboration:** Type code and see changes appear instantly on other users' screens.
 - **Room-based System:** Users can generate unique room IDs and invite others to join.
@@ -23,7 +23,7 @@
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Frontend:** React.js, Monaco Editor, Socket.io Client
 - **Backend:** Node.js, Express.js, Socket.io
@@ -31,11 +31,3 @@
 
 ---
 
-## ⚙️ Local Installation & Setup
-
-Follow these steps to run the project locally on your machine.
-
-### 1. Clone the Repository
-```bash
-git clone [https://github.com/your-username/my-code-collab.git](https://github.com/your-username/my-code-collab.git)
-cd my-code-collab
