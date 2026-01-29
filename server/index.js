@@ -21,6 +21,7 @@ const io = new Server(server, {
 });
 
 const userMap = {};
+const roomCodeMap = {}; // 1. NEW: Store code for each room here
 
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
@@ -30,11 +31,20 @@ io.on("connection", (socket) => {
     socket.join(room);
     userMap[socket.id] = { room, username };
     console.log(`${username} joined room: ${room}`);
-    // Notify EVERYONE in the room (including sender) to be safe
+    
     io.to(room).emit("notification", `${username} has joined the room!`);
+
+    // 2. NEW: Check if there is existing code in this room
+    // If yes, send it ONLY to the new user who just joined
+    if (roomCodeMap[room]) {
+      socket.emit("receive_code", roomCodeMap[room]);
+    }
   });
 
   socket.on("code_change", (data) => {
+    // 3. NEW: Update the stored code every time someone types
+    roomCodeMap[data.room] = data.code;
+    
     socket.to(data.room).emit("receive_code", data.code);
   });
 
@@ -43,6 +53,8 @@ io.on("connection", (socket) => {
     if (user) {
       socket.to(user.room).emit("notification", `${user.username} has left the room.`);
       delete userMap[socket.id];
+      // Note: We keep the code in roomCodeMap even if everyone leaves, 
+      // so if they come back, the code is still there!
     }
   });
 });

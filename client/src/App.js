@@ -8,7 +8,8 @@ import "./App.css";
 const isLocal = window.location.hostname === "localhost";
 
 // 2. Set the URL automatically
-// REPLACE "https://your-app.onrender.com" with your REAL Render URL later!
+// REPLACE "https://my-code-collab.onrender.com" with your REAL Render URL later!
+
 const SERVER_URL = isLocal 
   ? "http://localhost:3001" 
   : "https://my-code-collab.onrender.com";
